@@ -433,3 +433,15 @@ This is low-risk, matches the project notes, and improves the Streamlit ranking 
 Prioritize a working, testable app over perfect trading logic.
 
 Build in small milestones. Before major edits, summarize what files will change and why.
+
+## Documentation Maintenance Rule
+
+After any major project change, update all project context files so future VS Code / Codex / Copilot sessions have current information.
+
+Update each file according to its scope:
+
+- `README.md`: high-level project overview, current app capabilities, limitations, current phase, next steps, and roadmap.
+- `PROJECT_CONTEXT.md`: detailed implementation context, file/module status, architecture decisions, workflow notes, safety rules, and handoff details.
+- `.github/copilot-instructions.md`: concise repo-level instructions for Copilot, including coding style, safety rules, project architecture, and current development priorities.
+
+If a future assistant reads any one of these files and is asked to update project docs, it should update all three files when relevant.

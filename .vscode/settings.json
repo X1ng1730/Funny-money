@@ -1,0 +1,18 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    ".venv": true,
+    ".env": true,
+    "data_cache": true,
+    ".ipynb_checkpoints": true,
+    ".vscode/mcp.json": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "app.py": "data_yfinance.py, indicators.py, ranking_model.py, charting.py, alpha_vantage.py, local_ai_review.py, main.py",
+    "README.md": "PROJECT_CONTEXT.md, requirements.txt, vscode-extensions.txt",
+    ".gitignore": ".github, .vscode"
+  }
+}

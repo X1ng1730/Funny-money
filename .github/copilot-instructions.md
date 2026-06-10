@@ -91,3 +91,13 @@ In Streamlit tables, prefer:
 ```python
 st.dataframe(ranking, use_container_width=True, hide_index=True)
 ```
+
+## Documentation Maintenance
+
+After major project changes, keep the context files synchronized:
+
+- Update `README.md` for the high-level human-readable project summary.
+- Update `PROJECT_CONTEXT.md` for detailed implementation and handoff context.
+- Update `.github/copilot-instructions.md` when repo-level guidance or priorities change.
+
+If asked to "update project docs" or "update context files", review the current project state and update all three files within their proper scope.
