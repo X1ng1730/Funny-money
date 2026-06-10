@@ -78,10 +78,10 @@ def rank_stocks(price_data_by_ticker: dict) -> pd.DataFrame:
                 }
             )
 
-    ranking = ranking.sort_values("score", ascending=False).reset_index(drop=True)
-    ranking.insert(0, "rank", range(1, len(ranking) + 1))
+    ranking = pd.DataFrame(results)
 
     if not ranking.empty:
-        ranking = ranking.sort_values("score", ascending=False)
+        ranking = ranking.sort_values("score", ascending=False).reset_index(drop=True)
+        ranking.insert(0, "rank", range(1, len(ranking) + 1))
 
     return ranking
