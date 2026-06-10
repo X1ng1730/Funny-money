@@ -4,3 +4,4 @@ __pycache__/
 .env
 .ipynb_checkpoints/
 .vscode/mcp.json
+data_cache/
