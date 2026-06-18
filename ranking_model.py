@@ -5,8 +5,12 @@ from indicators import add_indicators
 
 def score_stock(ticker: str, price_data: pd.DataFrame) -> dict:
     df = add_indicators(price_data)
+    complete_rows = df.dropna()
 
-    latest = df.dropna().iloc[-1]
+    if complete_rows.empty:
+        raise ValueError("Not enough price history to calculate ranking indicators")
+
+    latest = complete_rows.iloc[-1]
 
     score = 0
     reasons = []

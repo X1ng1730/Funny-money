@@ -1,85 +1,141 @@
 # Swing Trading Model
 
-This is a personal swing-trading research dashboard built with Python and Streamlit. The goal is to help scan stocks, calculate technical indicators, rank possible setups, and review candidates in a more organized, risk-aware way.
+This is a personal stock swing-trading research dashboard built with Python and Streamlit. It helps organize watchlists, fetch daily market data, rank setups, review candidates with local Ollama AI, build trade plans, run strategy scans, backtest strategy rules, and keep a structured trade journal.
 
-This project is for research and education. It is not meant to provide guaranteed predictions or automatic buy/sell decisions.
+This project is for personal research and education. It does not provide guaranteed predictions, brokerage execution, automated trading, short selling, or options trading.
 
-## What The App Does
+## Current App Capabilities
 
-The app currently uses yfinance as the main data source for daily stock price and volume data. It calculates technical indicators locally, scores stocks with a starter ranking model, and displays results in a Streamlit dashboard.
+The app currently uses yfinance as the main market data source and keeps local caches so repeated app refreshes are faster. Alpha Vantage remains available as a helper module, but the main workflow is yfinance-first.
 
-Current dashboard pages:
+Current Streamlit pages:
 
-- Single Stock Analysis: enter one ticker and view recent price data, RSI, returns, moving averages, and volume.
-- Watchlist Ranking: enter multiple tickers and rank them using a simple technical scoring model.
-- Chart Viewer: view a Plotly candlestick chart with volume, moving averages, and basic support/resistance lines.
+- Single Stock Analysis: inspect one ticker with recent OHLCV data and indicators.
+- Watchlist Ranking: rank multiple tickers with the starter technical model.
+- Watchlist Dashboard: manage active watchlist rows and cached market snapshots.
+- Strategy Scanner: quick filtered view of strategy matches.
+- Comprehensive Scanner: manually run a full watchlist scan, apply filters, optionally run Ollama AI review, and save scan results.
+- Weekly Trade Watchlist: generate a focused watchlist from the strongest strategy candidates.
+- Backtesting Lab: test the same strategy engine historically with next-day entries, metrics, equity/drawdown visuals, presets, parameter sweeps, and optional AI review.
+- Trade Journal: manage the full trade lifecycle from planned trade to active trade to closed journal entry.
+- Chart Viewer: view a cleaner dark-mode candlestick chart with 8 EMA, 200 SMA, white support/resistance lines, and trade plan zones.
 
-## Current Model Logic
+## Major Improvements Added This Session
 
-The current ranking model is a starter proof of concept. It scores stocks using simple technical rules such as:
+- Added persistent watchlist market cache in `data_yfinance.py` to reduce slow reloads from repeated yfinance calls.
+- Simplified the main chart so it focuses on 8 EMA, 200 SMA, support/resistance, take-profit zones, and sell/invalidation zones.
+- Added strategy-aware scanner modules:
+  - `scanner.py`
+  - `scan_logger.py`
+- Added Backtesting Lab modules:
+  - `backtester.py`
+  - `backtest_metrics.py`
+  - `backtest_visuals.py`
+  - `backtest_ai_review.py`
+  - `strategy_presets.py`
+- Added local Ollama AI workflow modules:
+  - `ollama_client.py`
+  - `ai_review.py`
+  - `ai_validation.py`
+  - `ai_prompt_templates.py`
+  - `ai_watchlist_curator.py`
+- Added advanced strategy/technical support modules:
+  - `strategy_engine.py`
+  - `trade_plan.py`
+  - `support_resistance.py`
+  - `volume_profile.py`
+  - `acceptance_rejection.py`
+  - `liquidity.py`
+  - `fair_value_gap.py`
+  - `order_blocks.py`
+  - `vwap.py`
+  - `confluence.py`
+- Added a full trade journal subsystem in `journal.py` with planned trades, active trades, closed trades, P&L summary, AI hindsight grading, planned-vs-actual review, and personal edge tables.
 
-- Price above short-term moving averages
-- Positive 5-day and 20-day momentum
-- RSI in a constructive range
-- Volume above recent average
+## Trade Journal Workflow
 
-The scoring logic is intentionally simple for now so the dashboard can be tested and improved step by step.
+The Trade Journal now follows a clear lifecycle:
 
-## Limitations
+```text
+Plan trade
+  -> optional AI pre-trade review
+  -> actualize into active trade
+  -> close trade
+  -> calculate P&L, R multiple, MFE/MAE, plan-vs-actual differences
+  -> optional AI hindsight grade
+  -> journal lessons and personal edge review
+```
 
-Current limitations:
+Journal data is stored locally in:
 
-- The ranking model is not a final trading strategy.
-- It does not yet account for earnings dates, news risk, sector strength, market regime, stop-loss distance, or portfolio risk.
-- yfinance is useful for development, but it may not always be perfectly reliable.
-- Alpha Vantage is available as a helper module, but it is not yet used for top-candidate confirmation in the dashboard.
-- Local AI review through Ollama exists as a helper file, but it is not wired into the dashboard yet.
-- The app does not currently track trades, P&L, win rate, drawdown, or journal notes.
+- `data/journal/planned_trades.csv`
+- `data/journal/trades.csv`
+- `data/journal/ai_plan_reviews.jsonl`
+- `data/journal/ai_trade_reviews.jsonl`
+- `data/journal/journal_lessons.jsonl`
+- `data/journal/trade_scorecards.jsonl`
+- `data/journal/trade_screenshots/`
 
-## Current Phase
+The planned trade form intentionally stays simple. It only asks for setup date, ticker, strategy, setup type, planned entry, planned stop, planned target, and planned shares. IDs, risk/reward, exposure, max loss, max gain, AI review fields, and journal context are generated automatically.
 
-The project is currently in the early dashboard-building phase.
+## Model And Strategy Logic
 
-Completed or mostly working:
+There are now two levels of scoring:
 
-- Streamlit app shell
-- yfinance data loading
-- Local CSV caching
-- Basic indicator calculations
-- Watchlist ranking
-- Basic candlestick chart viewer
+- `ranking_model.py`: a simple starter ranking model for basic watchlist sorting.
+- `strategy_engine.py`: the main strategy evaluation layer used by scanner, weekly watchlist, chart context, and backtesting.
 
-Immediate next steps:
+Current strategy families:
 
-- Make a Git checkpoint of the current working state.
-- Clean up the ranking table with a real rank column and hidden pandas index.
-- Confirm the app runs reliably from `app.py`.
-- Continue improving the Chart Viewer.
-- Add local AI review after ranking is stable.
-- Add Alpha Vantage confirmation only for the top few ranked candidates.
+- Catalyst Gap / Multi-Month Breakout
+- EMA Pullback Trend Continuation
+- Reversal / Reclaim Setup
 
-## Documentation Maintenance
+The strategy engine combines deterministic setup logic, advanced technical confluence, higher-timeframe context, risk flags, and generated trade plan levels.
 
-After major project changes, update the project docs so future sessions stay aligned:
+## Ollama AI Integration
 
-- Update this `README.md` with the high-level app status, limitations, current phase, and next steps.
-- Update `PROJECT_CONTEXT.md` with the detailed implementation context and handoff notes.
-- Update `.github/copilot-instructions.md` if repo-level guidance, workflows, or safety rules change.
+Ollama is optional. The app works without it.
 
-## Project Roadmap
+When enabled, Ollama can:
 
-Planned phases:
+- Review scanner candidates.
+- Help curate the weekly watchlist.
+- Review planned trades before entry.
+- Grade closed trades in hindsight based on process, discipline, risk management, execution, and plan adherence.
+- Summarize journal patterns through AI Journal Coach.
+- Review backtest results.
 
-1. Build a basic Streamlit app for single-stock analysis.
-2. Add yfinance data loading and local caching.
-3. Add local technical indicators.
-4. Add a starter stock ranking model.
-5. Add a chart viewer for candlesticks, volume, moving averages, and support/resistance.
-6. Add local AI review using Ollama.
-7. Add Alpha Vantage confirmation for only the top 3-5 candidates.
-8. Add a trade journal.
-9. Add a P&L dashboard.
-10. Improve the scoring model with risk, market regime, relative strength, volatility, event risk, and portfolio constraints.
+The AI should use educational watchlist language and should not say that a user must buy or sell.
+
+## Local Data And Generated Output
+
+The app writes local files under:
+
+- `data/`
+- `data_cache/`
+
+Important generated folders/files include:
+
+- `data/watchlist_master.csv`
+- `data/categories.csv`
+- `data/watchlist_market_cache.csv`
+- `data/scans/`
+- `data/backtests/`
+- `data/ai_reviews/`
+- `data/journal/`
+- `data/strategy_presets.json`
+
+These are local working data files. Be careful before deleting or overwriting them.
+
+## Current Limitations
+
+- yfinance can be slow or temporarily unavailable, especially from restricted shell environments.
+- Daily OHLCV hindsight cannot know exact intraday sequence if a candle hits both stop and target.
+- Backtesting is daily-bar based and intended for research, not proof of future performance.
+- The AI review depends on local Ollama availability and valid JSON responses.
+- Alpha Vantage is still not part of the main candidate confirmation workflow.
+- No brokerage integration, live execution, automated trading, options, or shorts.
 
 ## How To Run
 
@@ -89,4 +145,41 @@ From PowerShell in the project folder:
 .\.venv\Scripts\python.exe -m streamlit run app.py --server.port 8502
 ```
 
-Then open the Streamlit URL shown in the terminal.
+Then open:
+
+```text
+http://127.0.0.1:8502
+```
+
+If the app behaves like old code after edits, stop and restart Streamlit. A browser refresh alone may not reload changed Python modules.
+
+## Useful Validation Commands
+
+Compile the main app and newer modules:
+
+```powershell
+.\.venv\Scripts\python.exe -m py_compile app.py journal.py scanner.py scan_logger.py backtester.py backtest_metrics.py backtest_visuals.py backtest_ai_review.py strategy_presets.py
+```
+
+Check git status:
+
+```powershell
+git status --short
+```
+
+## Next Useful Improvements
+
+- Add `.gitignore` coverage for generated local data/log/cache files if not already ignored.
+- Add safer edit/delete confirmations for journal records beyond the current checkbox flow.
+- Add journal import/export tools.
+- Improve backtest speed for larger universes.
+- Add Alpha Vantage confirmation only for top candidates.
+- Add more robust automated tests around journal calculations and strategy backtests.
+
+## Documentation Maintenance
+
+After major project changes, update:
+
+- `README.md`: high-level current state and how to run.
+- `PROJECT_CONTEXT.md`: detailed implementation context and handoff notes.
+- `.github/copilot-instructions.md` if repo-level workflows or safety rules change.

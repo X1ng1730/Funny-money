@@ -4,11 +4,11 @@ This file is a handoff note for future VS Code / Codex / Copilot chats. It summa
 
 ## Project Location
 
-`C:\Users\xingy\OneDrive\Desktop\Swing Trading Model`
+`C:\Users\xingy\OneDrive\Desktop\Vscode Projects\Swing Trading Model`
 
 ## User Experience Level
 
-The user is still new to Python, VS Code, virtual environments, Streamlit, Git, Codex/Copilot, and project structure.
+The user is still learning Python, VS Code, virtual environments, Streamlit, Git, Codex/Copilot, and project structure.
 
 When giving instructions:
 
@@ -16,6 +16,7 @@ When giving instructions:
 - Specify whether commands should be run in PowerShell or written inside a `.py` file.
 - Do not assume the user knows whether they are in PowerShell versus the Python `>>>` shell.
 - Work incrementally and preserve working milestones.
+- Prefer making code changes directly when the request is implementation-oriented.
 
 ## Safety Rules
 
@@ -23,43 +24,45 @@ When giving instructions:
 - Do not hardcode API keys.
 - Do not read or expose `.env` contents unless absolutely necessary and explicitly approved.
 - Ask before installing packages.
-- Ask before deleting files.
 - Ask before resetting Git.
-- Ask before making large changes.
 - Do not present dashboard output as guaranteed predictions or direct buy/sell instructions.
-- Keep analysis risk-aware, cautious, and educational.
+- Keep all analysis risk-aware, cautious, and educational.
+- This app is for personal long-only stock swing trading. No options, shorts, brokerage execution, or automated trading.
+- Local folders under `data/`, `data_cache/`, and `data/journal/` may contain user working data. Do not overwrite or clear them unless explicitly requested.
 
 ## Current Tech Stack
 
 - Windows
 - VS Code
 - Python virtual environment: `.venv`
-- Python installed through `uv`
-- Package installation through `uv pip install ...`
 - Streamlit for dashboard UI
-- yfinance as the main development/testing data source
-- Alpha Vantage as a secondary/cross-check source
-- Ollama with `llama3.2` for local AI review
+- pandas for data manipulation
+- yfinance as the main market data source
+- Plotly for charts
+- Ollama local AI, currently using `llama3.2:latest` in the UI by default
+- Alpha Vantage helper module exists but is not central to the current workflow
 - Git for local checkpoints
 
 ## Important Commands
 
-Run these in PowerShell from the project folder:
+Run these in PowerShell from the project folder.
+
+Activate venv:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-Run the Streamlit app:
-
-```powershell
-streamlit run app.py --server.port 8502
-```
-
-Safer Streamlit run command:
+Run Streamlit:
 
 ```powershell
 .\.venv\Scripts\python.exe -m streamlit run app.py --server.port 8502
+```
+
+Open:
+
+```text
+http://127.0.0.1:8502
 ```
 
 Stop Streamlit:
@@ -68,371 +71,499 @@ Stop Streamlit:
 Ctrl + C
 ```
 
-Install packages:
+Compile-check key modules:
 
 ```powershell
-uv pip install package_name
-```
-
-Update requirements:
-
-```powershell
-uv pip freeze > requirements.txt
+.\.venv\Scripts\python.exe -m py_compile app.py journal.py scanner.py scan_logger.py backtester.py backtest_metrics.py backtest_visuals.py backtest_ai_review.py strategy_presets.py
 ```
 
 Check Git:
 
 ```powershell
-git status
+git status --short
 git log --oneline
 ```
 
 ## Current Project Goal
 
-Build a personal swing-trading research dashboard for stocks.
+Build a personal swing-trading research and feedback-loop dashboard for stocks.
 
-The target holding period is roughly 1-6 weeks. The dashboard should eventually scan a stock universe such as Nasdaq 100, S&P 500, and a custom watchlist.
+Target holding period is roughly 1-6 weeks. The app should help the user:
 
-Risk preferences discussed earlier:
+- Maintain a watchlist.
+- Scan for swing setups.
+- Review strategy candidates.
+- View clean charts with relevant levels.
+- Backtest strategy ideas.
+- Plan trades before entry.
+- Track active trades.
+- Close and review trades.
+- Learn from planned-vs-actual behavior and repeated mistakes.
 
-- Max portfolio risk per trade: roughly 0.5%-2%
-- Max total open risk: roughly 5%-8%
-- Max open positions: roughly 3-5
-- No margin
-- Whole shares only
-
-The long-term benchmark should be better than a basket/average of large ETFs such as SPY, QQQ, VOO, etc.
-
-This is for personal research and decision support, not publishing.
-
-## High-Level Target Flow
+The long-term goal is a feedback loop:
 
 ```text
-app.py
-  -> data_yfinance.py pulls OHLCV data
-  -> indicators.py calculates indicators
-  -> ranking_model.py scores/ranks stocks
-  -> local_ai_review.py sends ranking to Ollama
-  -> app.py displays everything in Streamlit
+Watchlist scan
+  -> trade plan
+  -> AI pre-trade review
+  -> actual entry
+  -> close trade
+  -> planned-vs-actual review
+  -> AI hindsight grade
+  -> journal lessons
+  -> better future trade planning
 ```
 
-Later Alpha Vantage flow:
+## Current Streamlit Pages
 
-```text
-yfinance scans 100+ stocks
-  -> Python calculates indicators locally
-  -> ranking_model.py ranks them
-  -> Alpha Vantage checks only top 3-5 for earnings/news/fundamentals
-  -> Ollama reviews final candidates
-  -> Streamlit displays results
-```
-
-## Why yfinance Is Primary For Now
-
-Alpha Vantage free tier is too limited for early development/testing. It can hit rate limits quickly, especially if each button click makes multiple requests.
-
-During development, yfinance should be the main source for bulk price/volume data. Alpha Vantage should be used sparingly later, mainly for the top 3-5 ranked candidates.
-
-## Current Files
-
-### `app.py`
-
-Main Streamlit dashboard / entry point.
+`app.py` is the main dashboard entry point.
 
 Current pages:
 
 - Single Stock Analysis
 - Watchlist Ranking
+- Watchlist Dashboard
+- Strategy Scanner
+- Comprehensive Scanner
+- Weekly Trade Watchlist
+- Backtesting Lab
+- Trade Journal
 - Chart Viewer
 
-The final app should not require running every `.py` file separately. The main command should remain:
+The app should be run through `app.py`; individual helper modules should not be run as separate apps.
 
-```powershell
-streamlit run app.py --server.port 8502
+## Current Architecture Overview
+
+High-level flow:
+
+```text
+app.py
+  -> watchlist_manager.py loads/saves watchlist metadata
+  -> data_yfinance.py fetches/caches OHLCV and builds market snapshots
+  -> indicators.py calculates indicators
+  -> strategy_engine.py evaluates setup strategies
+  -> trade_plan.py builds entry/stop/target plan levels
+  -> scanner.py runs full watchlist scans
+  -> backtester.py tests the same strategy engine historically
+  -> journal.py manages planned/active/closed trade lifecycle
+  -> ollama_client.py and ai_*.py modules provide optional local AI review
+  -> charting.py renders Plotly charts
 ```
+
+## Key Files And Modules
+
+### `app.py`
+
+Main Streamlit UI.
+
+Important current additions:
+
+- Sidebar Ollama settings.
+- Persistent yfinance cache controls.
+- Comprehensive Scanner page.
+- Backtesting Lab page.
+- Trade Journal page with 8 tabs.
+- Cleaner Chart Viewer overlay controls.
 
 ### `data_yfinance.py`
 
-Downloads OHLCV data from yfinance.
+Main yfinance data layer.
 
 Current behavior:
 
-- Uses `data_cache/`
-- Provides `get_price_data()`
-- Provides `get_multiple_price_data()`
-- Normalizes yfinance columns to lowercase:
-  - `open`
-  - `high`
-  - `low`
-  - `close`
-  - `volume`
+- Uses `data_cache/` for ticker-period CSV cache.
+- Uses `data/watchlist_market_cache.csv` for persistent watchlist market snapshot cache.
+- Provides `get_price_data()`.
+- Provides `get_multiple_price_data()`.
+- Provides `get_watchlist_market_data()`.
+- Provides `clear_watchlist_market_cache()`.
+- Provides `build_market_snapshot()`, which is reused by the backtester to evaluate historical daily snapshots.
+- Normalizes yfinance OHLCV columns to lowercase.
+
+Important note: shell network access may be restricted in Codex, so yfinance/Yahoo requests can fail there even when the user browser/app environment works.
 
 ### `indicators.py`
 
-Calculates local indicators.
-
-Current indicators:
-
-- RSI 14
-- SMA 20
-- SMA 50
-- EMA 20
-- 5-day return
-- 20-day return
-- 20-day average volume
-- Volume ratio
-
-Future indicators:
-
-- MACD
-- ATR
-- EMA 10/50/100/200 shared with the main indicator module
-- Relative strength versus SPY/QQQ
-- Gap behavior
-- Volatility filters
+Local indicator module. It now supports the broader app, including EMA/SMA, returns, volume averages, ATR, RSI, and helper functions such as `latest_complete_row()`.
 
 ### `ranking_model.py`
 
-Scores and ranks stocks.
+Starter ranking model for the Watchlist Ranking page.
 
-Current starter scoring:
+This is separate from the richer strategy engine. It is still useful for quick simple ranking, but newer scanner/backtesting workflows primarily use `strategy_engine.py`.
 
-- +20 if close is above 20-day SMA
-- +20 if close is above 50-day SMA
-- +15 if 20-day SMA is above 50-day SMA
-- +10 if 5-day return is positive
-- +10 if 20-day return is positive
-- +15 if RSI is between 45 and 70
-- -10 if RSI is above 75
-- +10 if volume is above 1.2x 20-day average
+### `strategy_engine.py`
 
-Current output columns:
+Main strategy scoring system.
 
-- `ticker`
-- `score`
-- `latest_close`
-- `rsi`
-- `return_5d_pct`
-- `return_20d_pct`
-- `volume_ratio`
-- `reasons`
+Current strategy families:
 
-Known small cleanup needed:
+- Catalyst Gap / Multi-Month Breakout
+- EMA Pullback Trend Continuation
+- Reversal / Reclaim Setup
 
-- After sorting, reset the DataFrame index.
-- Add a real `rank` column.
-- Display tables with `hide_index=True`.
+Important functions:
 
-Suggested ranking cleanup:
+- `run_strategies(row, strategy_name=None)`
+- `evaluate_strategy(row, strategy_name)`
+- `result_to_flat_row(row, result)`
+- `build_strategy_results(dashboard_df)`
+- `best_strategy_per_ticker(strategy_df)`
 
-```python
-ranking = ranking.sort_values("score", ascending=False).reset_index(drop=True)
-ranking.insert(0, "rank", range(1, len(ranking) + 1))
-```
+The strategy engine combines:
+
+- Raw strategy setup score.
+- Advanced technical score.
+- Higher-timeframe context score.
+- Risk flags.
+- Generated entry/stop/target plan.
+
+### `trade_plan.py`
+
+Generates planned trade levels for strategy results:
+
+- Entry zone
+- Entry trigger
+- Stop price
+- Invalidation
+- Targets
+- Risk/reward values
+
+### Advanced Technical Modules
+
+These modules provide estimated/proxy confluence from daily yfinance OHLCV data:
+
+- `support_resistance.py`
+- `volume_profile.py`
+- `acceptance_rejection.py`
+- `liquidity.py`
+- `fair_value_gap.py`
+- `order_blocks.py`
+- `vwap.py`
+- `confluence.py`
+
+Important language: because the data is daily OHLCV from yfinance, volume profile, VWAP, fair value gaps, order blocks, and liquidity sweeps should be described as estimated/proxy signals.
 
 ### `charting.py`
 
 Creates Plotly chart figures.
 
-Current chart features:
+Current chart direction:
 
-- Candlestick chart
-- Volume subplot
-- EMA 10
-- EMA 20
-- EMA 50
-- EMA 100
-- EMA 200
-- SMA 200
-- Simple support/resistance lines
-- Cached ticker detection from `data_cache/`
+- Dark-mode friendly.
+- Intentionally less cluttered.
+- Default overlays:
+  - 8 EMA in light purple.
+  - 200 SMA in light pink.
+  - White support/resistance lines.
+  - Swing high/swing low support and resistance.
+  - Trade plan take-profit zone and sell/invalidation zone.
+- Advanced overlays are hidden under an optional expander.
 
-Current support/resistance logic:
+### Scanner Modules
 
-- Support = lowest low over selected lookback window
-- Resistance = highest high over selected lookback window
+`scanner.py`
 
-Future improvements:
+- Runs full watchlist strategy scans.
+- Applies deterministic filters.
+- Optionally calls AI review.
+- Adds deterministic watch/action labels if AI is disabled.
+- Summarizes scan results.
 
-- Support/resistance zones
-- Swing highs/lows
-- Volume profile
-- Trendlines
-- Earnings markers
-- Buy/sell markers
-- RSI/MACD lower panels
+`scan_logger.py`
+
+- Saves scan results to `data/scans/`.
+- Loads latest/saved scan CSV files.
+
+### Backtesting Modules
+
+`backtester.py`
+
+- Defines `BacktestConfig`.
+- Runs daily-bar backtests using the same `strategy_engine.py`.
+- Uses next-day entry after signal to reduce lookahead bias.
+- Simulates stop/target/time exits.
+- Saves results to `data/backtests/`.
+
+`backtest_metrics.py`
+
+- Calculates trades, win rate, average R, expectancy, profit factor, total return, max drawdown, holding period, exit counts.
+
+`backtest_visuals.py`
+
+- Builds equity curve and drawdown Plotly figures.
+
+`backtest_ai_review.py`
+
+- Optional Ollama review of backtest metrics and recent trades.
+
+`strategy_presets.py`
+
+- Saves/loads backtest strategy presets in `data/strategy_presets.json`.
+
+### AI / Ollama Modules
+
+`ollama_client.py`
+
+- Checks Ollama availability.
+- Lists local models.
+- Calls Ollama for JSON or text.
+- Parses JSON responses safely.
+
+`ai_prompt_templates.py`
+
+- Builds candidate review prompts.
+
+`ai_validation.py`
+
+- Validates/clamps AI review JSON.
+
+`ai_review.py`
+
+- Defines `AIReviewSettings`.
+- Reviews strategy candidates.
+- Caches AI reviews in `data/ai_reviews/`.
+- Integrates AI score with deterministic score when enabled.
+
+`ai_watchlist_curator.py`
+
+- Optional AI weekly curator that groups candidates into watchlist categories.
+
+Important: Ollama is optional. The app should work if Ollama is offline or returns invalid JSON.
+
+### `journal.py`
+
+New trade journal subsystem.
+
+Creates and manages:
+
+- `data/journal/planned_trades.csv`
+- `data/journal/trades.csv`
+- `data/journal/ai_plan_reviews.jsonl`
+- `data/journal/ai_trade_reviews.jsonl`
+- `data/journal/journal_lessons.jsonl`
+- `data/journal/trade_scorecards.jsonl`
+- `data/journal/trade_screenshots/`
+
+Important functions:
+
+- `ensure_journal_files()`
+- `load_planned_trades()`
+- `load_trades()`
+- `create_planned_trade()`
+- `validate_plan()`
+- `calculate_plan_fields()`
+- `actualize_trade()`
+- `close_active_trade()`
+- `build_trade_hindsight_packet()`
+- `run_ai_plan_review()`
+- `run_ai_trade_review()`
+- `execution_score_formula()`
+- `pnl_summary()`
+- `grouped_performance()`
+- `planned_vs_actual_table()`
+- `journal_coach_summary()`
+
+Trade lifecycle:
+
+```text
+Planned Trade
+  -> Active Trade
+  -> Closed Trade / Final Journal Entry
+```
+
+The user should never manually type `plan_id` or `trade_id`. These are generated automatically.
+
+### `watchlist_manager.py`
+
+Loads/saves watchlist and category CSV files under `data/`.
 
 ### `alpha_vantage.py`
 
 Alpha Vantage helper module.
 
-Current behavior:
+Current status:
 
-- Loads API key from `.env`
-- Uses `ALPHA_VANTAGE_API_KEY`
-- Does not hardcode API keys
-- Provides:
-  - `alpha_vantage_request()`
-  - `get_daily_prices()`
-  - `get_global_quote()`
-  - `get_rsi()`
+- Loads API key from `.env`.
+- Uses `ALPHA_VANTAGE_API_KEY`.
+- Does not hardcode keys.
+- Not heavily wired into the dashboard yet.
 
-For now, Alpha Vantage should not be used heavily in `app.py`.
-
-Later add a button such as:
-
-```text
-Confirm top 5 with Alpha Vantage
-```
-
-That button should only call Alpha Vantage for top ranked candidates, not the whole watchlist.
-
-### `local_ai_review.py`
-
-Ollama/local AI helper.
-
-Current behavior:
-
-- Uses the `ollama` Python package
-- Uses model `llama3.2`
-- Sends ranked stock text to a local model
-- Asks for cautious, risk-aware review
-- Avoids guaranteed predictions and direct buy/sell instructions
-
-This file exists but is not wired into `app.py` yet.
+Future use should be sparse, such as confirming only top candidates.
 
 ### `main.py`
 
-Scratch/test file only.
+Scratch/test file only. Not the production Streamlit entry point.
 
-Currently contains a small yfinance test. It is not the final dashboard entry point.
+## Local Data Files
 
-### `requirements.txt`
+Important generated/local data:
 
-Generated package list. Includes major dependencies such as:
+- `data/watchlist_master.csv`
+- `data/categories.csv`
+- `data/watchlist_market_cache.csv`
+- `data/scans/`
+- `data/backtests/`
+- `data/ai_reviews/`
+- `data/journal/`
+- `data/strategy_presets.json`
+- `data_cache/`
+- `data/yfinance_cache/`
 
-- streamlit
-- pandas
-- yfinance
-- plotly
-- ollama
-- python-dotenv
-- requests
+Treat these as local working data. Do not delete casually.
 
-### `.env`
+## Trade Journal Details
 
-Private file for API keys.
+The Trade Journal page has these tabs:
 
-Expected key:
+1. Plan New Trade
+2. Planned Trades
+3. Active Trades
+4. Closed Trade Journal
+5. P&L Summary
+6. AI Journal Coach
+7. Personal Edge
+8. Planned vs Actual Review
 
-```text
-ALPHA_VANTAGE_API_KEY=...
+### Plan New Trade
+
+Manual fields only:
+
+- setup date
+- ticker
+- strategy
+- setup type
+- planned entry price
+- planned stop loss
+- planned exit / target price
+- planned shares
+
+Auto-calculated:
+
+- plan ID
+- status
+- exposure
+- risk per share
+- total risk
+- reward per share
+- total reward
+- risk/reward
+- planned return %
+- planned loss %
+- max loss
+- max gain
+- AI plan score/confidence/feedback when AI review is run
+
+### Planned Trades
+
+Supports:
+
+- edit
+- run or rerun AI plan review
+- actualize trade
+- mark cancelled
+- mark skipped
+- delete with confirmation checkbox
+
+### Active Trades
+
+Actualized trades stay active until closed. Closing creates the final row in `trades.csv`; it does not delete the planned trade row.
+
+### Closed Trades
+
+Final record includes planned fields, active entry fields, close/reflection fields, P&L fields, R multiple, MFE/MAE, plan-vs-actual values, formula score, and optional AI grade.
+
+### Planned vs Actual Review
+
+Uses daily yfinance OHLCV to estimate:
+
+- whether target or stop was hit during holding period
+- MFE/MAE
+- whether target or stop was hit after exit
+- estimated plan-following P&L
+- whether following the plan may have done better
+
+If a daily candle touches both target and stop, intraday sequence is uncertain and should be treated as an estimate.
+
+## Current App Status
+
+Working milestone as of this session:
+
+- App runs at `http://127.0.0.1:8502`.
+- Core modules compile.
+- Comprehensive Scanner page exists.
+- Backtesting Lab exists.
+- Trade Journal exists.
+- Chart Viewer has simplified TradingView-style defaults.
+- Persistent yfinance watchlist cache exists.
+- Ollama integration is optional and should degrade gracefully.
+
+Validation commands run during this session:
+
+```powershell
+.\.venv\Scripts\python.exe -m py_compile app.py journal.py scanner.py scan_logger.py backtester.py backtest_metrics.py backtest_visuals.py backtest_ai_review.py strategy_presets.py
 ```
 
-Do not commit this file.
+Journal smoke checks confirmed:
 
-### `.gitignore`
+- Empty journal files load without crashing.
+- Planned trade calculations work.
+- Close-trade calculations and formula score work on synthetic data.
 
-Currently ignores:
+## Known Limitations / Risks
 
-- `__pycache__/`
-- `*.pyc`
-- `.venv/`
-- `.env`
-- `.ipynb_checkpoints/`
-- `.vscode/mcp.json`
+- yfinance can be unreliable or blocked in restricted shell environments.
+- Backtesting is daily-bar research only.
+- Daily OHLCV cannot determine exact intraday order when stop and target are both touched.
+- AI review quality depends on Ollama availability and JSON validity.
+- Trade journal edit/delete flows are functional but can be polished further.
+- Current backtester prioritizes correctness/readability over speed for large universes.
+- Alpha Vantage confirmation remains a future enhancement.
 
-Recommended addition:
+## Current Git / Worktree Note
 
-```text
-data_cache/
-```
+The worktree contains many uncommitted modified and new files from this session. Do not revert unrelated changes. Before a major new feature, consider making a local Git checkpoint.
 
-### `data_cache/`
+Files added or heavily changed this session include:
 
-Local cached yfinance CSV files.
+- `app.py`
+- `data_yfinance.py`
+- `charting.py`
+- `scanner.py`
+- `scan_logger.py`
+- `backtester.py`
+- `backtest_metrics.py`
+- `backtest_visuals.py`
+- `backtest_ai_review.py`
+- `strategy_presets.py`
+- `journal.py`
+- `ollama_client.py`
+- `ai_review.py`
+- `ai_validation.py`
+- `ai_prompt_templates.py`
+- `ai_watchlist_curator.py`
+- `strategy_engine.py`
+- `trade_plan.py`
+- advanced technical modules listed above
 
-Current cached tickers include examples such as:
+## Recommended Next Steps
 
-- AAPL
-- AMD
-- AMZN
-- GOOGL
-- META
-- MSFT
-- NVDA
-- TSLA
+High-value next work:
 
-This folder should usually be ignored by Git unless intentionally saving sample data.
-
-## Current Git Status Observed
-
-At the time this context file was created, `git status --short` showed uncommitted changes/new files including:
-
-- Modified `app.py`
-- Modified `requirements.txt`
-- New `charting.py`
-- New `data_yfinance.py`
-- New `indicators.py`
-- New `ranking_model.py`
-- New `vscode-extensions.txt`
-- New `data_cache/`
-
-Before larger work, consider making a local Git checkpoint.
-
-## Current Dashboard Status
-
-The Streamlit app appears to be in a working milestone state.
-
-It already has:
-
-- yfinance as primary data source
-- Local data caching
-- Single stock analysis
-- Watchlist ranking
-- Basic chart viewer
-- Plotly candlestick chart
-- Moving average overlays
-- Simple support/resistance
-
-It does not yet have:
-
-- AI review wired into the dashboard
-- Alpha Vantage confirmation button for top candidates
-- Trade journal
-- P&L dashboard
-- Advanced scoring/risk model
-
-## Recommended Safest Next Step
-
-Before making more functional changes, preserve the current working milestone with Git.
-
-Then make the smallest useful cleanup:
-
-1. Add `data_cache/` to `.gitignore`.
-2. Update `ranking_model.py` to reset the sorted index and add a real `rank` column.
-
-This is low-risk, matches the project notes, and improves the Streamlit ranking table without changing the whole system.
-
-## Phased Build Order
-
-1. Confirm app runs.
-2. Confirm yfinance cache works.
-3. Confirm single stock chart works.
-4. Confirm watchlist ranking works.
-5. Confirm rank column/index cleanup.
-6. Add or polish Chart Viewer.
-7. Add AI review using Ollama.
-8. Add Alpha Vantage confirmation for top candidates.
-9. Add trade journal.
-10. Add P&L dashboard.
-11. Improve scoring/risk model.
+1. Make a local Git checkpoint.
+2. Add or update `.gitignore` for generated logs/cache/data if needed.
+3. Add small automated tests for `journal.py` calculations.
+4. Improve Trade Journal editing UX and confirmations.
+5. Add export/import tools for journal data.
+6. Improve backtest speed for larger ticker universes.
+7. Add Alpha Vantage confirmation only for top candidates.
+8. Continue refining strategy logic based on real journal results.
 
 ## Development Principle
 
 Prioritize a working, testable app over perfect trading logic.
 
-Build in small milestones. Before major edits, summarize what files will change and why.
+Build in small milestones. Keep changes modular. Preserve user data. Explain what changed and how to use it.
 
 ## Documentation Maintenance Rule
 
@@ -440,8 +571,6 @@ After any major project change, update all project context files so future VS Co
 
 Update each file according to its scope:
 
-- `README.md`: high-level project overview, current app capabilities, limitations, current phase, next steps, and roadmap.
-- `PROJECT_CONTEXT.md`: detailed implementation context, file/module status, architecture decisions, workflow notes, safety rules, and handoff details.
-- `.github/copilot-instructions.md`: concise repo-level instructions for Copilot, including coding style, safety rules, project architecture, and current development priorities.
-
-If a future assistant reads any one of these files and is asked to update project docs, it should update all three files when relevant.
+- `README.md`: high-level project overview, current capabilities, limitations, current phase, next steps, and how to run.
+- `PROJECT_CONTEXT.md`: detailed implementation context, architecture decisions, file/module status, workflow notes, safety rules, and handoff details.
+- `.github/copilot-instructions.md`: concise repo-level instructions if repo-level workflows or safety rules change.

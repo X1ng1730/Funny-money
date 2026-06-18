@@ -10,7 +10,7 @@ load_dotenv()
 BASE_URL = "https://www.alphavantage.co/query"
 
 
-def alpha_vantage_request(function: str, **params: Any) -> dict:
+def alpha_vantage_request(function: str, **params: Any) -> dict[str, Any]:
     api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
 
     if not api_key:
@@ -72,7 +72,7 @@ def get_daily_prices(symbol: str, outputsize: str = "compact") -> pd.DataFrame:
     return df
 
 
-def get_global_quote(symbol: str) -> dict:
+def get_global_quote(symbol: str) -> dict[str, Any]:
     data = alpha_vantage_request("GLOBAL_QUOTE", symbol=symbol.upper())
     return data.get("Global Quote", {})
 

@@ -1,0 +1,125 @@
+ticker,category,quick_thesis,macro_tag,manual_catalyst,priority,active
+SOFI,Open Positions,,,,High,True
+APLD,Open Positions,,,,High,True
+MU,Open Positions,,,,High,True
+NASA,Open Positions,,,,High,True
+SHOP,Open Positions,,,,High,True
+GOOGL,Open Positions,,,,High,True
+META,Open Positions,,,,High,True
+SPCX,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+MRVL,Weekly Watchlist / High-Priority Movers,AI networking + custom silicon,AI capex,Earnings / AI data-center commentary,High,True
+YOU,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+INTC,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+LUV,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+IONQ,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+RKLB,Weekly Watchlist / High-Priority Movers,Launch + space infrastructure,Risk-on space,Launch / index / contract news,High,True
+DAL,Weekly Watchlist / High-Priority Movers,Airline demand + oil sensitivity,Oil-sensitive,Oil prices / travel demand,Medium,True
+UAL,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+NFLX,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+RDW,Weekly Watchlist / High-Priority Movers,,,,Medium,True
+NVDA,AI Compute & Core Semiconductors,,,,Medium,True
+AMD,AI Compute & Core Semiconductors,,,,Medium,True
+AVGO,AI Compute & Core Semiconductors,,,,Medium,True
+MRVL,AI Compute & Core Semiconductors,AI networking + custom silicon,AI capex,Earnings / AI data-center commentary,High,True
+QCOM,AI Compute & Core Semiconductors,,,,Medium,True
+INTC,AI Compute & Core Semiconductors,,,,Medium,True
+TSM,AI Compute & Core Semiconductors,,,,Medium,True
+STM,AI Compute & Core Semiconductors,,,,Medium,True
+TXN,AI Compute & Core Semiconductors,,,,Medium,True
+MU,"AI Memory, Storage & Data Throughput",,,,Medium,True
+DRAM,"AI Memory, Storage & Data Throughput",,,,Medium,True
+WDC,"AI Memory, Storage & Data Throughput",,,,Medium,True
+STX,"AI Memory, Storage & Data Throughput",,,,Medium,True
+SNDK,"AI Memory, Storage & Data Throughput",,,,Medium,True
+KIOXIA,"AI Memory, Storage & Data Throughput",,,,Medium,True
+SIMO,"AI Memory, Storage & Data Throughput",,,,Medium,True
+ACMR,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+AEHR,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+COHU,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+ICHR,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+UCTT,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+AMKR,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+VECO,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+FORM,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+ACLS,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+AXTI,"Semiconductor Equipment, Test, Packaging & Fab Support",,,,Medium,True
+APLD,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+DELL,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+JBL,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+CIEN,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+NOK,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+TMUS,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+CEG,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+NRG,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+AMSC,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+POET,"AI Data-Center Infrastructure, Networking, Power & Optical Support",,,,Medium,True
+PANW,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+CRWD,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+FTNT,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+PLTR,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+SNOW,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+ORCL,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+CRM,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+WDAY,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+NOW,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+SAP,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+IBM,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+MSFT,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+ADBE,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+DOCU,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+ZM,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+YOU,"Cloud, Enterprise Software, Cybersecurity & AI Workflow",,,,Medium,True
+GOOGL,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+META,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+AMZN,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+SHOP,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+NFLX,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+SPOT,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+FOX,"Internet, E-Commerce, Streaming & Digital Ads",,,,Medium,True
+SPCX,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+NASA,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+RKLB,"Space, Satellites, Launch & Commercial Space",Launch + space infrastructure,Risk-on space,Launch / index / contract news,High,True
+RDW,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+ASTS,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+SPIR,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+SPCE,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+LUNR,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+VOYG,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+FLY,"Space, Satellites, Launch & Commercial Space",,,,Medium,True
+LMT,"Aerospace, Defense & Aviation Suppliers",,,,Medium,True
+MRCY,"Aerospace, Defense & Aviation Suppliers",,,,Medium,True
+ATROB,"Aerospace, Defense & Aviation Suppliers",,,,Medium,True
+FTAI,"Aerospace, Defense & Aviation Suppliers",,,,Medium,True
+DAL,"Airlines, Travel & Oil-Sensitive Cyclicals",Airline demand + oil sensitivity,Oil-sensitive,Oil prices / travel demand,Medium,True
+UAL,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+AAL,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+LUV,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+USO,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+XOM,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+CVX,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+BP,"Airlines, Travel & Oil-Sensitive Cyclicals",,,,Medium,True
+CAT,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+STRL,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+LYB,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+NRG,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+CEG,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+JBL,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+AMSC,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+TSLA,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+BP,"Energy, Power, Infrastructure & Heavy Industry",,,,Medium,True
+LULU,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+CELH,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+CAVA,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+CMG,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+COST,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+CROX,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+ULTA,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+VSXY,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+SFM,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+KMX,"Consumer Growth, Restaurants, Retail & Lifestyle",,,,Medium,True
+SOFI,"Financials, Fintech & Credit",,,,Medium,True
+JPM,"Financials, Fintech & Credit",,,,Medium,True
+BMO,"Financials, Fintech & Credit",,,,Medium,True
+KMX,"Financials, Fintech & Credit",,,,Medium,True
+ABBV,"Healthcare, Pharma & Biotech",,,,Medium,True
+ADPT,"Healthcare, Pharma & Biotech",,,,Medium,True
