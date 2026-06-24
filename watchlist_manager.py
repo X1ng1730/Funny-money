@@ -81,7 +81,7 @@ def _default_watchlist_rows() -> list[dict]:
 
 
 def ensure_watchlist_files() -> None:
-    DATA_DIR.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     categories = pd.DataFrame(
         [{"category": category, "description": description} for category, description in DEFAULT_CATEGORIES.items()]

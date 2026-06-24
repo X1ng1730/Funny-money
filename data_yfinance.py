@@ -15,9 +15,9 @@ from volume_profile import calculate_volume_profile
 from vwap import vwap_features
 
 CACHE_DIR = Path("data_cache")
-CACHE_DIR.mkdir(exist_ok=True)
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
 DATA_DIR = Path("data")
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 WATCHLIST_MARKET_CACHE = DATA_DIR / "watchlist_market_cache.csv"
 try:
     yfinance_cache_dir = Path("data") / "yfinance_cache"
@@ -84,7 +84,7 @@ def get_price_data(
 
         cache_file.unlink()
 
-    CACHE_DIR.mkdir(exist_ok=True)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
         df = yf.download(
